@@ -1,11 +1,14 @@
 {
   "name": "cref",
-  "displayName": "Cref",
+  "displayName": "cref",
   "description": "Jump to any file referenced via # @path/to/file comment",
   "version": "0.1.0",
   "publisher": "kinjouj",
   "homepage": "https://github.com/kinjouj/cref",
-  "repository": { "type": "git", "url": "https://github.com/kinjouj/cref" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kinjouj/cref"
+  },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],
   "activationEvents": [],

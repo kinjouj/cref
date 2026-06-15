@@ -2,17 +2,17 @@ const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
 
-const SPEC_COMMENT_RE = /^[\s#\/*]+@([\S]+)/;
+function findSpecPaths(document) {
+  const paths = [];
 
-function findSpecPath(document) {
-  for (let i = 0; i < Math.min(document.lineCount, 30); i++) {
+  for (let i = 0; i < Math.min(document.lineCount, 10); i++) {
     const line = document.lineAt(i).text;
-    const match = line.match(SPEC_COMMENT_RE);
+    const match = line.match(/^[\s#\/*]+@([\S]+)/);
 
-    if (match) return match[1];
+    if (match) paths.push(match[1]);
   }
 
-  return null;
+  return paths;
 }
 
 function resolveSpecFile(specPath, workspaceFolders) {
@@ -31,9 +31,9 @@ function activate(context) {
 
     if (!editor) return;
 
-    const specPath = findSpecPath(editor.document);
+    const specPaths = findSpecPaths(editor.document);
 
-    if (!specPath) {
+    if (!specPaths.length) {
       vscode.window.showWarningMessage('No spec comment found. Add "# @path/to/file" near the top of the file.');
       return;
     }
@@ -45,10 +45,20 @@ function activate(context) {
       return;
     }
 
-    const absolute = resolveSpecFile(specPath, folders);
+    let selectedPath;
+
+    if (specPaths.length === 1) {
+      selectedPath = specPaths[0];
+    } else {
+      selectedPath = await vscode.window.showQuickPick(specPaths, { placeHolder: "Jump to..." });
+
+      if (!selectedPath) return;
+    }
+
+    const absolute = resolveSpecFile(selectedPath, folders);
 
     if (!absolute) {
-      vscode.window.showWarningMessage(`File not found: ${specPath}`);
+      vscode.window.showWarningMessage(`File not found: ${selectedPath}`);
       return;
     }
 
