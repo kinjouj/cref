@@ -1,0 +1,29 @@
+{
+  "name": "cref",
+  "displayName": "Cref",
+  "description": "Jump to any file referenced via # @path/to/file comment",
+  "version": "0.1.0",
+  "publisher": "kinjouj",
+  "homepage": "https://github.com/kinjouj/cref",
+  "repository": { "type": "git", "url": "https://github.com/kinjouj/cref" },
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cref.jump",
+        "title": "Cref: Jump to Referenced File"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "cref.jump",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      }
+    ]
+  }
+}
