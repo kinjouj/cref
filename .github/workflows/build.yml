@@ -28,6 +28,6 @@ jobs:
       - name: Upload VSIX Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vsc-extension-vsix
+          name: cref-0.1.0
           path: "*.vsix"
           if-no-files-found: error
