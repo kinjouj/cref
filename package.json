@@ -9,8 +9,12 @@
     "type": "git",
     "url": "https://github.com/kinjouj/cref"
   },
-  "engines": { "vscode": "^1.85.0" },
-  "categories": ["Other"],
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
@@ -28,5 +32,17 @@
         "when": "editorTextFocus"
       }
     ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.0.0",
+    "@types/vscode": "^1.125.0",
+    "@vscode/vsce": "^3.9.2",
+    "eslint": "^10.5.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.0"
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./"
   }
 }

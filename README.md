@@ -11,59 +11,38 @@
 
 ## 使い方
 
-ファイルの先頭付近に `# @<パス>` 形式のコメントを書くだけ。
+ファイル先頭 10 行以内に `# @<パス>` 形式のコメントを書くだけ。
 
 ```ruby
 # @spec/models/user_spec.rb
 
 class User
-  ...
 ```
 
-```javascript
-// @src/__tests__/utils.test.js
+```typescript
+// @src/__tests__/utils.test.ts
 
-export function formatDate(date) {
-  ...
+export function formatDate(date: Date) {
 ```
 
-パスはワークスペースルートからの相対パスで指定します。
+パスはワークスペースルートからの相対パスで指定します。複数の `@パス` コメントが見つかった場合はクイックピックで選択できます。
 
+
+## コメントがない場合の自動推定
+
+`@パス` コメントがない場合、ファイルの拡張子に応じてテストファイルを探します。
 
 ## キーバインド
 
 | OS | ショートカット |
 |----|--------------|
-| Windows / Linux | `Ctrl+Shift+T` |
-| macOS | `Cmd+Shift+T` |
+| Linux | `Ctrl+Shift+T` |
 
 
-## 対応コメント形式
+## 対応言語
 
-言語を問わず、行頭が `#` `//` `/*` などのコメントであれば認識します。
-
-```ruby
-# @path/to/file.rb
-```
-```javascript
-// @path/to/file.js
-```
-```python
-# @path/to/test.py
-```
-
-## インストール
-
-```bash
-code --install-extension cref-0.1.0.vsix
-```
-
-または Extensions ビューの `⋯ → Install from VSIX...` から。
-
-
-## ビルド
-
-```bash
-npm install -g @vscode/vsce
-vsce package --no-dependencies --allow-missing-repository
-```
+| 拡張子 | ルール |
+|---|---|
+|.rb|RubyTestRule|
+|.js|JSTestRule|
+|.ts/.tsx|JSTestRule|
