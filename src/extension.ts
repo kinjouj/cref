@@ -1,32 +1,33 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as vscode from "vscode";
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as vscode from 'vscode';
 
 interface Rule {
-  getCandidates(relPath: string): string[];
+  getCandidates(relPath: string): string[]
 }
 
 class RubyTestRule implements Rule {
-  getCandidates(relPath: string) {
-    const base = relPath.replace(/^lib\//, "spec/").replace(/\.rb$/, "");
+  getCandidates(relPath: string): string[] {
+    const base = relPath.replace(/^lib\//, 'spec/').replace(/\.rb$/, '');
     return [`${base}_spec.rb`];
   }
 }
 
 class JSTestRule implements Rule {
-  constructor(private exts: string[]) {}
+  constructor(private exts: string[]) {
+  }
 
-  public getCandidates(relPath: string) {
+  public getCandidates(relPath: string): string[] {
     const dir = path.dirname(relPath);
     const base = path.basename(relPath, path.extname(relPath));
     const search: string[] = [];
 
     for (const ext of this.exts) {
       search.push(path.join(dir, `${base}.test${ext}`));
-      search.push(path.join(dir, "__tests__", `${base}.test${ext}`));
+      search.push(path.join(dir, '__tests__', `${base}.test${ext}`));
     }
 
-    const testDir = dir.replace("src/", "tests/").replace("lib/", "tests/");
+    const testDir = dir.replace('src/', 'tests/').replace('lib/', 'tests/');
 
     if (testDir !== dir) {
       for (const ext of this.exts) {
@@ -41,13 +42,13 @@ class JSTestRule implements Rule {
 class CrefJumpService {
   private rules: Partial<Record<string, Rule>> = {};
 
-  addRule(exts: string[], rule: Rule) {
+  addRule(exts: string[], rule: Rule): void {
     for (const ext of exts) {
       this.rules[ext] = rule;
     }
   }
 
-  async jump(editor: vscode.TextEditor) {
+  async jump(editor: vscode.TextEditor): Promise<void> {
     const folder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
 
     if (!folder) {
@@ -60,14 +61,14 @@ class CrefJumpService {
     if (specPaths.length > 0) {
       const selected = specPaths.length === 1 ? specPaths[0] : await vscode.window.showQuickPick(specPaths);
 
-      if (!selected) {
+      if (selected === undefined) {
         return;
       }
 
       const absolute = path.join(folder.uri.fsPath, selected);
       targetPath = fs.existsSync(absolute) ? absolute : null;
 
-      if (!targetPath) {
+      if (targetPath === null) {
         vscode.window.showWarningMessage(`File not found: ${selected}`);
         return;
       }
@@ -75,8 +76,8 @@ class CrefJumpService {
       const result = this.findByRule(editor.document, folder);
       targetPath = result.found;
 
-      if (!targetPath) {
-        vscode.window.showWarningMessage(`Test file not found\n\n${result.search.sort().join("\n\n")}`);
+      if (targetPath === null) {
+        vscode.window.showWarningMessage(`Test file not found\n\n${result.search.sort().join('\n\n')}`);
         return;
       }
     }
@@ -87,7 +88,7 @@ class CrefJumpService {
     }
   }
 
-  private findByRule(document: vscode.TextDocument, folder: vscode.WorkspaceFolder) {
+  private findByRule(document: vscode.TextDocument, folder: vscode.WorkspaceFolder): { found: string | null, search: string[] } {
     const filePath = document.uri.fsPath;
     const rule = this.rules[path.extname((filePath))];
 
@@ -114,12 +115,12 @@ class CrefJumpService {
     return { found: null, search };
   }
 
-  private findCommentPaths(document: vscode.TextDocument) {
+  private findCommentPaths(document: vscode.TextDocument): string[] {
     const paths: string[] = [];
     const max = Math.min(document.lineCount, 10);
 
     for (let i = 0; i < max; i++) {
-      const match = document.lineAt(i).text.match(/^\s*(?:#|\/\/|\*|\/\*)\s*@(.+)/);
+      const match = /^\s*(?:#|\/\/|\*|\/\*)\s*@(.+)/.exec(document.lineAt(i).text);
 
       if (match) {
         paths.push(match[1].trim());
@@ -130,13 +131,13 @@ class CrefJumpService {
   }
 }
 
-function activate(context: vscode.ExtensionContext) {
+function activate(context: vscode.ExtensionContext): void {
   const jumper = new CrefJumpService();
-  jumper.addRule([".rb"], new RubyTestRule());
-  jumper.addRule([".js"], new JSTestRule([".js"]));
-  jumper.addRule([".ts", ".tsx"], new JSTestRule([".ts", ".tsx"]));
+  jumper.addRule(['.rb'], new RubyTestRule());
+  jumper.addRule(['.js'], new JSTestRule(['.js']));
+  jumper.addRule(['.ts', '.tsx'], new JSTestRule(['.ts', '.tsx']));
 
-  const cmd = vscode.commands.registerCommand("cref.jump", async () => {
+  const cmd = vscode.commands.registerCommand('cref.jump', async () => {
     const editor = vscode.window.activeTextEditor;
 
     if (!editor) {
@@ -149,6 +150,8 @@ function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(cmd);
 }
 
-function deactivate() {}
+function deactivate(): void {
+  // noop
+}
 
 module.exports = { activate, deactivate };

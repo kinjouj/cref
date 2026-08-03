@@ -1,0 +1,15 @@
+{
+  "files.exclude": {
+    ".npmrc": true,
+    "package-lock.json": true,
+    "node_modules": true,
+    "dist": true
+  },
+  "[typescript]": {
+    "editor.indentSize": "tabSize",
+    "editor.tabSize": 2,
+  },
+  "[typescriptreact]": {
+    "editor.tabSize": 2,
+  }
+}

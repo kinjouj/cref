@@ -1,4 +1,5 @@
-.github
-extension.ts
-tsconfig.json
-eslint.config.mjs
+**
+!package.json
+!dist/**
+!README.md
+!LICENSE.txt

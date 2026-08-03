@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.tsbuildinfo",
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "target": "es2022",
     "module": "commonjs",
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    "moduleResolution": "Bundler",
     "strict": true,
     "esModuleInterop": true,
+    "isolatedModules": true,
     "types": ["node", "vscode"]
   },
-  "include": ["extension.ts"]
+  "include": ["src/extension.ts", "./vite.config.ts"]
 }
