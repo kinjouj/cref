@@ -8,12 +8,12 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "target": "es2022",
-    "module": "commonjs",
+    "module": "ESNext",
     "moduleResolution": "Bundler",
     "strict": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "types": ["node", "vscode"]
+    "types": ["node", "vscode", "vite/client"]
   },
-  "include": ["src/extension.ts", "./vite.config.ts"]
+  "include": ["src/**/*.ts", "./vite.config.ts"]
 }
