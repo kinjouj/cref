@@ -42,7 +42,7 @@ export class CrefJumpService {
       targetPath = result.found;
 
       if (targetPath === null) {
-        vscode.window.showWarningMessage(`Test file not found\n\n${result.search.sort().join('\n')}`, { modal: true });
+        vscode.window.showWarningMessage(`File not found\n\n${result.search.sort().join('\n')}`, { modal: true });
         return;
       }
     }

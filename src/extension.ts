@@ -26,12 +26,35 @@ function activate(context: vscode.ExtensionContext): void {
     await jumper.jump(editor);
   });
 
-  const linkProvider = vscode.languages.registerDocumentLinkProvider(
-    allRules.flatMap((rule) => rule.extensions).map((ext) => ({ scheme: 'file', pattern: `**/*${ext}` })),
-    new CrefDocumentLinkProvider()
+  const subscriptions: vscode.Disposable[] = [cmd];
+  let linkProvider: vscode.Disposable | undefined;
+
+  function applyLinkProvider(): void {
+    const enabled = vscode.workspace.getConfiguration('cref').get<boolean>('enableDocumentLinkProvider', true);
+
+    if (enabled && !linkProvider) {
+      linkProvider = vscode.languages.registerDocumentLinkProvider(
+        allRules.flatMap((rule) => rule.extensions).map((ext) => ({ scheme: 'file', pattern: `**/*${ext}` })),
+        new CrefDocumentLinkProvider()
+      );
+      subscriptions.push(linkProvider);
+    } else if (!enabled && linkProvider) {
+      linkProvider.dispose();
+      linkProvider = undefined;
+    }
+  }
+
+  applyLinkProvider();
+
+  subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('cref.enableDocumentLinkProvider')) {
+        applyLinkProvider();
+      }
+    })
   );
 
-  context.subscriptions.push(cmd, linkProvider);
+  context.subscriptions.push(...subscriptions);
 }
 
 function deactivate(): void {
