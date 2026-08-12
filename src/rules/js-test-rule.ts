@@ -38,7 +38,6 @@ abstract class BaseJSTestRule implements Rule {
 
   private findTests(baseDir: string, base: string, ext: string): string[] {
     const search: string[] = [];
-
     search.push(path.join(baseDir, `${base}.test${ext}`));
 
     const testDir = baseDir.replace(/(^|\/)(?:src|lib)($|\/)/, '$1tests$2');

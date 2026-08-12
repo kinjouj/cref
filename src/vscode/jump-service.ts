@@ -39,12 +39,19 @@ export class CrefJumpService {
       }
     } else {
       const result = this.findByRule(editor.document, folder);
-      targetPath = result.found;
 
-      if (targetPath === null) {
-        vscode.window.showWarningMessage(`File not found\n\n${result.search.sort().join('\n')}`, { modal: true });
+      if (result.found.length === 0) {
+        vscode.window.showWarningMessage(`Test file not found\n\n${result.search.sort().join('\n')}`, { modal: true });
         return;
       }
+
+      const selected = result.found.length === 1 ? result.found[0] : await vscode.window.showQuickPick(result.found);
+
+      if (selected === undefined) {
+        return;
+      }
+
+      targetPath = selected;
     }
 
     if (targetPath) {
@@ -53,15 +60,16 @@ export class CrefJumpService {
     }
   }
 
-  private findByRule(document: vscode.TextDocument, folder: vscode.WorkspaceFolder): { found: string | null, search: string[] } {
+  private findByRule(document: vscode.TextDocument, folder: vscode.WorkspaceFolder): { found: string[], search: string[] } {
     const filePath = document.uri.fsPath;
     const rule = this.rules[path.extname((filePath))];
 
     if (!rule) {
-      return { found: null, search: [] };
+      return { found: [], search: [] };
     }
 
     const search = rule.getCandidates(path.relative(folder.uri.fsPath, filePath));
+    const found: string[] = [];
 
     for (const candidate of search) {
       const absolute = path.join(folder.uri.fsPath, candidate);
@@ -70,13 +78,13 @@ export class CrefJumpService {
         const stat = fs.statSync(absolute);
 
         if (stat.isFile()) {
-          return { found: absolute, search: [] };
+          found.push(absolute);
         }
       } catch {
         // noop
       }
     }
 
-    return { found: null, search };
+    return { found, search };
   }
 }
