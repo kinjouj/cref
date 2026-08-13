@@ -1,6 +1,6 @@
 import type { Rule } from '../types';
 
-export class RubyTestRule implements Rule {
+export class RubyFileRule implements Rule {
   readonly extensions = ['.rb'];
 
   getCandidates(source: string): string[] {

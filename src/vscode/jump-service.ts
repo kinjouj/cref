@@ -13,7 +13,11 @@ export class CrefJumpService {
     }
   }
 
-  async jump(editor: vscode.TextEditor): Promise<void> {
+  async jump(editor: vscode.TextEditor | null): Promise<void> {
+    if (!editor) {
+      return;
+    }
+
     const folder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
 
     if (!folder) {
@@ -41,7 +45,7 @@ export class CrefJumpService {
       const result = this.findByRule(editor.document, folder);
 
       if (result.found.length === 0) {
-        vscode.window.showWarningMessage(`Test file not found\n\n${result.search.sort().join('\n')}`, { modal: true });
+        vscode.window.showWarningMessage(`File not found\n\n${result.search.sort().join('\n')}`, { modal: true });
         return;
       }
 

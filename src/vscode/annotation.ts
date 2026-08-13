@@ -6,7 +6,7 @@ type CommentAnnotation = {
   targetPath: string
 };
 
-export const ANNOTATION_PATTERN = /^\s*(?:#|\/\/)\s+@(\S+)/;
+const ANNOTATION_PATTERN = /^\s*(?:#|\/\/)\s+@(\S+)/;
 
 export function parseCommentAnnotations(document: vscode.TextDocument): CommentAnnotation[] {
   const annotations: CommentAnnotation[] = [];

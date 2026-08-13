@@ -2,6 +2,7 @@
   "files.exclude": {
     ".npmrc": true,
     "package-lock.json": true,
+    "*.vsix": true,
     "node_modules": true,
     "dist": true
   },

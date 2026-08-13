@@ -6,6 +6,11 @@ import { parseCommentAnnotations } from './annotation';
 export class CrefDocumentLinkProvider implements vscode.DocumentLinkProvider {
   public provideDocumentLinks(document: vscode.TextDocument, _token: vscode.CancellationToken): vscode.DocumentLink[] {
     const links: vscode.DocumentLink[] = [];
+
+    if (!vscode.workspace.getConfiguration('cref').get<boolean>('enableDocumentLinkProvider', true)) {
+      return links;
+    }
+
     const folder = vscode.workspace.getWorkspaceFolder(document.uri);
 
     if (!folder) {
@@ -16,11 +21,9 @@ export class CrefDocumentLinkProvider implements vscode.DocumentLinkProvider {
       const absolute = path.join(folder.uri.fsPath, annotation.targetPath);
 
       if (fs.existsSync(absolute)) {
+        const { line, column, targetPath } = annotation;
         const link = new vscode.DocumentLink(
-          new vscode.Range(
-            new vscode.Position(annotation.line, annotation.column),
-            new vscode.Position(annotation.line, annotation.column + 1 + annotation.targetPath.length)
-          ),
+          new vscode.Range(new vscode.Position(line, column), new vscode.Position(line, column + 1 + targetPath.length)),
           vscode.Uri.file(absolute)
         );
 

@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 import type { Rule } from '../types';
 
-abstract class BaseJSTestRule implements Rule {
+abstract class BaseFileRule implements Rule {
   abstract readonly extensions: string[];
 
   public getCandidates(source: string): string[] {
@@ -19,7 +19,6 @@ abstract class BaseJSTestRule implements Rule {
   private findSources(baseDir: string, sourceBase: string, ext: string): string[] {
     const search: string[] = [];
     const dirs = new Set<string>();
-
     const fromTests = baseDir.replace(/(^|\/)tests($|\/)/, '$1src$2');
 
     if (fromTests !== baseDir) {
@@ -50,10 +49,10 @@ abstract class BaseJSTestRule implements Rule {
   }
 }
 
-export class JSTestRule extends BaseJSTestRule {
+export class JavascriptRule extends BaseFileRule {
   readonly extensions = ['.js'];
 }
 
-export class TSTestRule extends BaseJSTestRule {
+export class TypescriptRule extends BaseFileRule {
   readonly extensions = ['.ts', '.tsx'];
 }
