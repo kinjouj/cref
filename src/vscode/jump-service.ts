@@ -66,7 +66,7 @@ export class CrefJumpService {
 
   private findByRule(document: vscode.TextDocument, folder: vscode.WorkspaceFolder): { found: string[], search: string[] } {
     const filePath = document.uri.fsPath;
-    const rule = this.rules[path.extname((filePath))];
+    const rule = this.rules[path.extname(filePath)];
 
     if (!rule) {
       return { found: [], search: [] };

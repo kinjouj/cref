@@ -8,7 +8,7 @@ export class CrefDocumentLinkProvider implements vscode.DocumentLinkProvider {
     const links: vscode.DocumentLink[] = [];
 
     if (!vscode.workspace.getConfiguration('cref').get<boolean>('enableDocumentLinkProvider', true)) {
-      return links;
+      return [];
     }
 
     const folder = vscode.workspace.getWorkspaceFolder(document.uri);
