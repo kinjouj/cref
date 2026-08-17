@@ -24,9 +24,33 @@ function activate(context: vscode.ExtensionContext): void {
     await jumper.jump(editor);
   });
 
-  const linkProvider = vscode.languages.registerDocumentLinkProvider(selectors, new CrefDocumentLinkProvider());
+  let linkProvider: vscode.Disposable | undefined;
+
+  const applyLinkProvider = (): void => {
+    const enabled = vscode.workspace.getConfiguration('cref').get<boolean>('enableDocumentLinkProvider', true);
+
+    if (enabled && !linkProvider) {
+      linkProvider = vscode.languages.registerDocumentLinkProvider(selectors, new CrefDocumentLinkProvider());
+      context.subscriptions.push(linkProvider);
+    } else if (!enabled && linkProvider) {
+      linkProvider.dispose();
+      linkProvider = undefined;
+    }
+  };
+
+  applyLinkProvider();
+
   const completionProvider = vscode.languages.registerCompletionItemProvider(selectors, new CrefCompletionProvider(), '@');
-  context.subscriptions.push(cmd, linkProvider, completionProvider);
+
+  context.subscriptions.push(
+    cmd,
+    completionProvider,
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('cref.enableDocumentLinkProvider')) {
+        applyLinkProvider();
+      }
+    })
+  );
 }
 
 function deactivate(): void {

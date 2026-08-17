@@ -6,11 +6,6 @@ import { parseCommentAnnotations } from './annotation';
 export class CrefDocumentLinkProvider implements vscode.DocumentLinkProvider {
   public provideDocumentLinks(document: vscode.TextDocument, _token: vscode.CancellationToken): vscode.DocumentLink[] {
     const links: vscode.DocumentLink[] = [];
-
-    if (!vscode.workspace.getConfiguration('cref').get<boolean>('enableDocumentLinkProvider', true)) {
-      return [];
-    }
-
     const folder = vscode.workspace.getWorkspaceFolder(document.uri);
 
     if (!folder) {
