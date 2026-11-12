@@ -10,7 +10,7 @@
     "url": "https://github.com/kinjouj/cref"
   },
   "engines": {
-    "vscode": "^1.145.0"
+    "vscode": "^1.146.0"
   },
   "categories": [
     "Other"
@@ -53,13 +53,16 @@
     "@eslint/js": "^9.39.5",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.6.6",
-    "@types/vscode": "^1.145.0",
+    "@types/vscode": "^1.146.0",
     "@vscode/vsce": "^4.1.0",
     "eslint": "^9.39.5",
     "eslint-plugin-import": "^2.32.0",
     "globals": "^17.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.6"
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.8"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1"
   }
 }
